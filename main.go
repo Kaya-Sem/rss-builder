@@ -1,4 +1,4 @@
-package rssbuilder
+package main
 
 import (
 	"encoding/xml"
@@ -19,6 +19,7 @@ func NewRSSFeed(channel Channel) *RSS {
 
 }
 
+// Creates a new channel with the required title, link and description values. All other values should be supplied with the builder methods
 func NewChannel(title, link, description string) *Channel {
 	return &Channel{ChannelTitle: title, ChannelLink: link, ChannelDescription: description}
 }
@@ -113,32 +114,37 @@ ttl
 
 type Channel struct {
 	XMLName               xml.Name `xml:"channel"`
-	ChannelLastBuildDate  string   `xml:"lastBuildDate"`
-	ChannelPubDate        string   `xml:"pubDate"`
+	ChannelLastBuildDate  string   `xml:"lastBuildDate,omitempty"`
+	ChannelPubDate        string   `xml:"pubDate,omitempty"`
 	ChannelTitle          string   `xml:"title"`
 	ChannelLink           string   `xml:"link"`
 	ChannelDescription    string   `xml:"description"`
-	ChannelWebMaster      string   `xml:"webMaster"`
+	ChannelWebMaster      string   `xml:"webMaster,omitempty"`
 	ChannelItems          []Item   `xml:"item"`
-	ChannelCopyright      string   `xml:"copyright"`
-	ChannelManagingEditor string   `xml:"managingEditor"`
-	ChannelDocs           string   `xml:"docs"`
+	ChannelCopyright      string   `xml:"copyright,omitempty"`
+	ChannelManagingEditor string   `xml:"managingEditor,omitempty"`
+	ChannelDocs           string   `xml:"docs,omitempty"`
 
 	//ChannelLanguage       string   `xml:"language"`
 }
 
 /*
 Missing spec implementations:
-comments
-catergory
-enclosure
+	- comments
+	- catergory
+	- enclosure
 */
+
+// Struct representing an item in an RSS feed's channel
 type Item struct {
+	/* Only one of these is required, but I choose both */
 	ItemTitle       string `xml:"title"`
-	ItemLink        string `xml:"link,omitempty"`
 	ItemDescription string `xml:"description"`
-	ItemAuthor      string `xml:"author,omitempty"`
-	ItemGuid        string `xml:"guid"`
-	ItemPubDate     string `xml:"pubDate"`
-	ItemSource      string `xml:"source,omitempty"`
+
+	/* Optional */
+	ItemLink    string `xml:"link,omitempty"`
+	ItemAuthor  string `xml:"author,omitempty"`
+	ItemGuid    string `xml:"guid,omitempty"`
+	ItemPubDate string `xml:"pubDate,omitempty"`
+	ItemSource  string `xml:"source,omitempty"`
 }
